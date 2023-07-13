@@ -18,7 +18,7 @@ struct ContentView: View {
                     .foregroundColor(.accentColor)
                     .font(.title)
                 Text("Tip Calculator")
-                    .font(.title)
+                    .font(.largeTitle)
                     .fontWeight(.bold)
             }
             HStack{
@@ -37,6 +37,43 @@ struct ContentView: View {
             } else {
                 Text("Please enter a numeric value.")
             }
+            VStack{
+                HStack{
+                    Image(systemName: "clock.fill")
+                        .imageScale(.medium)
+                        .foregroundColor(.black)
+                        .font(.title)
+                    Text("History")
+                        .font(.title)
+                        .fontWeight(.light)
+                }
+                VStack{
+                    HStack{
+                        Button {
+                            
+                        } label: {
+                            Text("Clear")
+                                .foregroundColor(Color.white)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.blue)
+                        Button {
+                            
+                        } label: {
+                            Text("Save Current")
+                                .foregroundColor(.white)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.green)
+                    }
+                    HStack{
+                        Text("Number")
+                        Text("Date")
+                        Text("Amount")
+                    }
+                }
+            }.padding(.top, 16)
+            Spacer()
         }.padding()
     }
 }
