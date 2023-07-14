@@ -28,7 +28,6 @@ struct ContentView: View {
             }
             HStack{
                 Text("$")
-//                TextField("Amount", text: $amount).keyboardType(.decimalPad)
                 TextField("Enter your Bill", value: $amount, format: .number)
             }
             HStack {
@@ -40,7 +39,7 @@ struct ContentView: View {
                 Text("Tip Amount: \(amount * tipPercent / 100, format: .currency(code: "CAD"))")
                 Text("Total Amount: \(amount * (1 + tipPercent / 100), format: .currency(code: "CAD"))")
                 Button {
-                    addRandom()
+                    appendRecent()
                 } label: {
                     Text("Add to Recent")
                 }
@@ -106,12 +105,12 @@ struct ContentView: View {
         }.padding()
     }
     
-    func addRandom() {
-        myTransactions.append(Transaction(number: myTransactions.count + 1, date: Date.now, amount: amount, tip: amount * (1 + tipPercent)/100))
-    }
-    
-    func saveCurrentTransaction() {
-        
+    func appendRecent() {
+        if amount > 0.00 {
+            myTransactions.append(Transaction(number: myTransactions.count + 1, date: Date.now, amount: amount, tip: amount * (1 + tipPercent)/100))
+        } else {
+            print("Transaction will not be added due to it being 0 or below.")
+        }
     }
     
     func loadTransactions() {
