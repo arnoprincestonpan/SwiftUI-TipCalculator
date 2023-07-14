@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State var total = "0.00"
     @State var tipPercent = 15.0
+    @State var myTransactions = [Transaction]()
     var body: some View {
         VStack {
             HStack {
@@ -50,7 +51,7 @@ struct ContentView: View {
                 VStack{
                     HStack{
                         Button {
-                            
+                            clearAllTransactions()
                         } label: {
                             Text("Clear")
                                 .foregroundColor(Color.white)
@@ -58,9 +59,9 @@ struct ContentView: View {
                         .buttonStyle(.borderedProminent)
                         .tint(.blue)
                         Button {
-                            
+                            saveTransactions()
                         } label: {
-                            Text("Save Current")
+                            Text("Save All")
                                 .foregroundColor(.white)
                         }
                         .buttonStyle(.borderedProminent)
@@ -76,6 +77,49 @@ struct ContentView: View {
             Spacer()
         }.padding()
     }
+    
+    func saveCurrentTransaction() {
+
+    }
+    
+    func loadTransactions() {
+        if let data = UserDefaults.standard.data(forKey: "previousTransactions") {
+            do {
+                let decoder = JSONDecoder()
+                let decodedTransactions = try decoder.decode([Transaction].self, from: data)
+                myTransactions = decodedTransactions
+            } catch {
+                print("Failed to decode transactions:", error)
+            }
+        } else {
+            myTransactions = []
+        }
+    }
+    
+    func clearAllTransactions(){
+        myTransactions.removeAll()
+    }
+    
+    func saveTransactions(){
+        if myTransactions.count != 0 {
+            do {
+                let encoder = JSONEncoder()
+                let encodedData = try encoder.encode(myTransactions)
+                UserDefaults.standard.set(encodedData, forKey: "previousTransactions")
+            } catch {
+                print("Failed to encode transactions: ", error)
+            }
+        } else {
+            print("No transactions was added. You have done no calculations.")
+        }
+    }
+}
+
+struct Transaction: Codable {
+    let number: Int
+    let date: Date
+    let amount: Double
+    let tip: Double
 }
 
 struct ContentView_Previews: PreviewProvider {
