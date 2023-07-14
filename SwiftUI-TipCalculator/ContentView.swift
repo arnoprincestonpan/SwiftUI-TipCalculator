@@ -37,8 +37,8 @@ struct ContentView: View {
             }
 
             VStack(alignment: .leading) {
-                Text("Tip Amount: $\(amount * tipPercent / 100, specifier: "%0.2f")")
-                Text("Total Amount: $\(amount + amount * tipPercent / 100, specifier: "%0.2f")")
+                Text("Tip Amount: \(amount * tipPercent / 100, format: .currency(code: "CAD"))")
+                Text("Total Amount: \(amount * (1 + tipPercent / 100), format: .currency(code: "CAD"))")
                 Button {
                     addRandom()
                 } label: {
@@ -76,17 +76,30 @@ struct ContentView: View {
                         .buttonStyle(.borderedProminent)
                         .tint(.green)
                     }
+
                     HStack{
-                        List(myTransactions, id: \.number) { transaction in
-                            HStack {
-                                Text("\(transaction.number)")
-                                Text("\(transaction.date.formatted())")
-                                Text(transaction.amount, format: .currency(code: "CAD"))
-                                Text(transaction.tip, format: .currency(code: "CAD"))
-                            }
-                        }
-                        .listStyle(.plain)
+                        Text("#")
+                        Spacer()
+                        Text("Date")
+                        Spacer()
+                        Text("Amount")
+                        Spacer()
+                        Text("Tip Amount")
                     }
+                    .font(.headline)
+                    
+                    List(myTransactions, id: \.number) { transaction in
+                        HStack {
+                            Text("\(transaction.number)")
+                            Spacer()
+                            Text("\(transaction.date.formatted())")
+                            Spacer()
+                            Text(transaction.amount, format: .currency(code: "CAD"))
+                            Spacer()
+                            Text(transaction.tip, format: .currency(code: "CAD"))
+                        }
+                    }
+                    .listStyle(.plain)
                 }
             }.padding(.top, 16)
             Spacer()
@@ -94,7 +107,7 @@ struct ContentView: View {
     }
     
     func addRandom() {
-        myTransactions.append(Transaction(number: myTransactions.count + 1, date: Date.now, amount: amount, tip: tipPercent))
+        myTransactions.append(Transaction(number: myTransactions.count + 1, date: Date.now, amount: amount, tip: amount * (1 + tipPercent)/100))
     }
     
     func saveCurrentTransaction() {
