@@ -10,7 +10,11 @@ import SwiftUI
 struct ContentView: View {
     @State var total = "0.00"
     @State var tipPercent = 15.0
+    
+    var sample1: Transaction = Transaction(number: 1, date: Date.now, amount: 10.00, tip: 1.00)
     @State var myTransactions = [Transaction]()
+
+    
     var body: some View {
         VStack {
             HStack {
@@ -34,17 +38,24 @@ struct ContentView: View {
                 VStack(alignment: .leading) {
                     Text("Tip Amount: $\(totalNumber * tipPercent / 100, specifier: "%0.2f")")
                     Text("Total Amount: $\(totalNumber + totalNumber * tipPercent / 100, specifier: "%0.2f")")
+                    Button {
+                        addRandom()
+                    } label: {
+                        Text("Add to Recent")
+                    }
+                    .buttonStyle(.bordered)
                 }
             } else {
                 Text("Please enter a numeric value.")
             }
+            
             VStack{
                 HStack{
                     Image(systemName: "clock.fill")
                         .imageScale(.medium)
                         .foregroundColor(.black)
                         .font(.title)
-                    Text("History")
+                    Text("Recent")
                         .font(.title)
                         .fontWeight(.light)
                 }
@@ -68,9 +79,15 @@ struct ContentView: View {
                         .tint(.green)
                     }
                     HStack{
-                        Text("Number")
-                        Text("Date")
-                        Text("Amount")
+                        List(myTransactions, id: \.number) { transaction in
+                            HStack {
+                                Text("\(transaction.number)")
+                                Text("\(transaction.date)")
+                                Text("\(transaction.amount)")
+                                Text("\(transaction.tip)")
+                            }
+                        }
+                        .listStyle(.plain)
                     }
                 }
             }.padding(.top, 16)
@@ -78,8 +95,12 @@ struct ContentView: View {
         }.padding()
     }
     
+    func addRandom() {
+        myTransactions.append(sample1)
+    }
+    
     func saveCurrentTransaction() {
-
+        
     }
     
     func loadTransactions() {
