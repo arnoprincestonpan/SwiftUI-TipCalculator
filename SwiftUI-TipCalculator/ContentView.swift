@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var total = "0.00"
+    @State var amount = 0.00
     @State var tipPercent = 15.0
     
     var sample1: Transaction = Transaction(number: 1, date: Date.now, amount: 10.00, tip: 1.00)
@@ -28,25 +28,23 @@ struct ContentView: View {
             }
             HStack{
                 Text("$")
-                TextField("Amount", text: $total).keyboardType(.decimalPad)
+//                TextField("Amount", text: $amount).keyboardType(.decimalPad)
+                TextField("Enter your Bill", value: $amount, format: .number)
             }
             HStack {
                 Slider(value: $tipPercent, in: 1...30, step: 1.0)
                 Text("\(Int(tipPercent))%")
             }
-            if let totalNumber = Double(total){
-                VStack(alignment: .leading) {
-                    Text("Tip Amount: $\(totalNumber * tipPercent / 100, specifier: "%0.2f")")
-                    Text("Total Amount: $\(totalNumber + totalNumber * tipPercent / 100, specifier: "%0.2f")")
-                    Button {
-                        addRandom()
-                    } label: {
-                        Text("Add to Recent")
-                    }
-                    .buttonStyle(.bordered)
+
+            VStack(alignment: .leading) {
+                Text("Tip Amount: $\(amount * tipPercent / 100, specifier: "%0.2f")")
+                Text("Total Amount: $\(amount + amount * tipPercent / 100, specifier: "%0.2f")")
+                Button {
+                    addRandom()
+                } label: {
+                    Text("Add to Recent")
                 }
-            } else {
-                Text("Please enter a numeric value.")
+                .buttonStyle(.bordered)
             }
             
             VStack{
@@ -82,9 +80,9 @@ struct ContentView: View {
                         List(myTransactions, id: \.number) { transaction in
                             HStack {
                                 Text("\(transaction.number)")
-                                Text("\(transaction.date)")
-                                Text("\(transaction.amount)")
-                                Text("\(transaction.tip)")
+                                Text("\(transaction.date.formatted())")
+                                Text(transaction.amount, format: .currency(code: "CAD"))
+                                Text(transaction.tip, format: .currency(code: "CAD"))
                             }
                         }
                         .listStyle(.plain)
@@ -96,7 +94,7 @@ struct ContentView: View {
     }
     
     func addRandom() {
-        myTransactions.append(sample1)
+        myTransactions.append(Transaction(number: myTransactions.count + 1, date: Date.now, amount: amount, tip: tipPercent))
     }
     
     func saveCurrentTransaction() {
